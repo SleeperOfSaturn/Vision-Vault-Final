@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vision Vault</title>
+    <style>
+        /* Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Body Styling */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #000000; /* OLED black */
+            color: #e0e0e0; /* Light text */
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        /* Header Styling */
+        .header {
+    width: 100%;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: flex-start; /* Align items to the start instead of space-between */
+    align-items: center;
+    background-color: rgba(18, 18, 18, 0.9); /* Darker background with transparency */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 500;
+            color: #ffffff;
+        }
+
+        .header .nav a {
+            color: #a8a8a8; /* Softer gray for links */
+            text-decoration: none;
+            margin-left: 2rem;
+            font-size: 1rem;
+            font-weight: 400;
+        }
+
+        /* Launch Screen Styling */
+        .launch-screen {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            max-width: 1200px;
+            height: 70vh; /* Adjust height as needed */
+            margin-top: 2rem;
+            padding: 2rem;
+        }
+
+        .title {
+            font-size: 10rem; /* Make the text massive */
+            font-weight: 700;
+            color: #ffffff; /* White for high contrast */
+            letter-spacing: 0.02em; /* Reduced letter spacing for better balance */
+            line-height: 1.2; /* Increase line height for better spacing */
+            max-width: 500px; /* Force the word 'Vault' to wrap */
+            word-break: break-word; /* Ensure wrapping occurs */
+            margin-bottom: 20px; /* Add space below */
+        }
+
+        /* Sphere Container */
+        #sphere-container {
+            width: 50%; /* Right half of the screen */
+            height: 100%;
+            background-color: #000000; /* Match OLED black */
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        /* Section Styling */
+        .section {
+            width: 100%;
+            max-width: 1200px;
+            margin: 4rem 0;
+            text-align: center;
+        }
+
+        .section h2 {
+            font-size: 2rem;
+            color: #ffffff;
+            margin-bottom: 1rem;
+        }
+
+        .section p {
+            color: #a8a8a8;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Cards Layout */
+        .cards {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            gap: 2rem;
+        }
+
+        .card {
+            background-color: #2c2c2e;
+            border-radius: 12px;
+            padding: 2rem;
+            max-width: 300px;
+            flex: 1;
+        }
+
+        .card h3 {
+            font-size: 1.5rem;
+            color: #ffffff;
+            margin-bottom: 1rem;
+        }
+
+        .card p {
+            color: #a8a8a8;
+        }
+
+        /* Footer */
+        footer {
+            margin-top: 4rem;
+            padding: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+        }
+
+        footer p {
+            color: #707070;
+        }
+        .kits-info {
+    margin: 2rem 0;
+    color: #a8a8a8;
+}
+
+.kits-container {
+    display: flex;
+    align-items: flex-start; /* Align content to the top */
+    background-color: #000000; /* Background color */
+    padding: 2rem;
+}
+
+.kits-image {
+    max-width: 40%; /* Adjust to your desired width */
+    margin-right: 2rem; /* Space between image and text */
+    border-radius: 12px;
+}
+
+.kits-content {
+    max-width: 60%; /* Ensure content takes remaining space */
+    color: #ffffff; /* Change text color for readability */
+}
+.flow-chart {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Center the flow chart */
+    color: #ffffff; /* Text color */
+    margin: 2rem 0; /* Space around the flow chart */
+}
+
+.flow-item {
+    text-align: center; /* Center text in each item */
+    margin: 0 1rem; /* Space between items */
+}
+
+.flow-number {
+    font-size: 2rem; /* Number size */
+    font-weight: bold; /* Make numbers bold */
+    color: #ffffff; /* Color of the numbers */
+}
+
+.flow-arrow {
+    font-size: 2rem; /* Size of the arrow */
+    color: #ffffff; /* Color of the arrows */
+}
+.emoji {
+    font-size: 40px; /* Adjust size of the emojis */
+    display: block; /* Center the emoji above the text */
+    margin-bottom: 1rem; /* Space between emoji and text */
+}
+
+.offerings-container {
+    display: flex;
+    justify-content: space-around; /* Space items evenly */
+    flex-wrap: wrap; /* Allow wrapping */
+    color: #ffffff; /* Text color */
+    margin: 2rem 0; /* Space around the section */
+}
+
+.offering-tile {
+    background-color: #1c1c1c; /* Background color for tiles */
+    border-radius: 8px; /* Rounded corners */
+    padding: 2rem; /* Space inside tiles */
+    text-align: center; /* Center text */
+    margin: 1rem; /* Space between tiles */
+    flex: 1 1 200px; /* Flex properties for responsiveness */
+    max-width: 220px; /* Max width of each tile */
+}
+.dropdown {
+    margin: 1rem 0; /* Space around dropdowns */
+    position: relative; /* Position relative for dropdown content */
+}
+
+.dropdown-btn {
+    background-color: #1c1c1c; /* Darker background color */
+    color: #ffffff; /* Text color */
+    padding: 12px 20px; /* Space inside button */
+    border: 1px solid #333; /* Subtle border */
+    border-radius: 8px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor on hover */
+    font-size: 1rem; /* Font size */
+    transition: background-color 0.3s, border-color 0.3s; /* Smooth transitions */
+    width: 100%; /* Full width */
+    text-align: left; /* Left align text */
+}
+
+.dropdown-btn:hover {
+    background-color: #007bff; /* Change color on hover */
+    border-color: #0056b3; /* Darker border on hover */
+}
+
+.dropdown-content {
+    display: none; /* Hidden by default */
+    position: absolute; /* Position below the button */
+    background-color: #1c1c1c; /* Background color for dropdown */
+    min-width: 160px; /* Minimum width */
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2); /* Shadow effect */
+    z-index: 1; /* Bring above other elements */
+    border-radius: 8px; /* Rounded corners */
+}
+
+.dropdown:hover .dropdown-content {
+    display: block; /* Show dropdown on hover */
+}
+
+.dropdown-content p {
+    color: #fff; /* Text color for dropdown content */
+    margin: 0; /* Remove default margin */
+    padding: 10px; /* Space inside dropdown content */
+    text-align: left; /* Left align text */
+}
+
+.dropdown-content p:hover {
+    background-color: rgba(255, 255, 255, 0.1); /* Light highlight on hover */
+}
+.bloom-effect {
+    position: relative; /* Needed for positioning pseudo-elements */
+    color: #ffffff; /* Base text color */
+    font-size: 2rem; /* Adjust as needed */
+    text-shadow: 
+        0 0 5px rgba(255, 127, 127, 0.5),  /* Light pink */
+        0 0 10px rgba(255, 239, 127, 0.5), /* Light yellow */
+        0 0 15px rgba(127, 255, 127, 0.5), /* Light green */
+        0 0 20px rgba(127, 127, 255, 0.5); /* Light blue */
+}
+.logo {
+    width: 50px; /* Adjust the size as needed */
+    height: auto; /* Maintain aspect ratio */
+    filter: invert(1); /* Invert colors */
+    margin-right: 1rem;
+}
+    </style>
+</head>
+<body>
+
+    <!-- Header with Navigation -->
+    <div class="header">
+        <img src="logo.png" alt="Vision Vault Logo" class="logo" />
+        <h1>Vision Vault</h1>
+        <div class="nav">
+            <a href="#kits">Kits</a>
+            <a href="#all-inclusive-kits">All-Inclusive Kits</a>
+            <a href="#courses">Courses</a>
+            <a href="#offerings">Offerings</a>
+            <a href="#empowering-individuals">Empowering Individuals</a>
+        </div>
+    </div>
+    
+
+    <!-- Launch Screen Section -->
+    <div class="launch-screen">
+        <div  class="bloom-effect"><div class="title">Vision<br><span style="margin-top: 0px;">Vault</span></div></div> <!-- Adjusted spacing -->
+        <div id="sphere-container"></div>
+    </div>
+
+    <!-- Kits Section -->
+    <section id="kits" class="section">
+        <h2>Specialized Kits for Aspiring Artists, Entrepreneurs, and Personal Growth</h2>
+        <div class="cards">
+            <div class="card">
+                <h3>Artist Kits</h3>
+                <p>Comprehensive kits with all the essentials to unleash your creative potential.</p>
+            </div>
+            <div class="card">
+                <h3>Entrepreneur Kits</h3>
+                <p>Equip yourself with the tools and resources to turn your business ideas into reality.</p>
+            </div>
+            <div class="card">
+                <h3>Personal Growth Kits</h3>
+                <p>Discover kits designed to help you embark on your journey of self-discovery and transformation.</p>
+            </div>
+        </div>
+    </section>
+    <!-- All-Inclusive Kits Section -->
+<section id="all-inclusive-kits" class="section">
+    <div class="kits-container">
+        <img src="https://imgproxy.gamma.app/resize/quality:80/resizing_type:fit/width:600/https://cdn.gamma.app/h30p5d3g2id9mx0/generated-images/T9b1vz9geL1CrDsXDFGrN.jpg" alt="Kits Image" class="kits-image">
+        <div class="kits-content">
+            <h2>All-Inclusive Kits: Tools and Materials to Get Started</h2>
+            <div class="kits-info">
+                <h3>Comprehensive Kits</h3>
+                <p>Our carefully curated kits provide everything you need to begin your journey.</p>
+            </div>
+            <div class="kits-info">
+                <h3>Quality Materials</h3>
+                <p>High-quality tools and resources designed to support your success.</p>
+            </div>
+            <div class="kits-info">
+                <h3>Plug-and-Play</h3>
+                <p>Start exploring your passions immediately with our ready-to-use kits.</p>
+            </div>
+            <div class="kits-info">
+                <h3>No Guesswork</h3>
+                <p>We've done the research to ensure you have everything to get started.</p>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Expert-Crafted Online Courses Section -->
+<section id="courses" class="section">
+    <h2>Expert-Crafted Online Courses</h2>
+    <div class="flow-chart">
+        <div class="flow-item">
+            <span class="flow-number">1</span>
+            <h3>Convenience</h3>
+            <p>Learn at your own pace from the comfort of your home.</p>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-item">
+            <span class="flow-number">2</span>
+            <h3>Interactivity</h3>
+            <p>Engage with course materials and connect with fellow learners.</p>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-item">
+            <span class="flow-number">3</span>
+            <h3>Expertise</h3>
+            <p>Benefit from the guidance of industry-leading instructors.</p>
+        </div>
+    </div>
+</section>
+<!-- Offerings Section -->
+<section id="offerings" class="section">
+    <h2>Creative Arts, Business Strategy, and Self-Development Offerings</h2>
+    <div class="offerings-container">
+        <div class="offering-tile">
+            <span class="emoji">🎨</span> <!-- Emoji for Creative Arts -->
+            <h3>Creative Arts</h3>
+            <p>Explore courses in painting, photography, and more.</p>
+        </div>
+        <div class="offering-tile">
+            <span class="emoji">📈</span> <!-- Emoji for Business Strategy -->
+            <h3>Business Strategy</h3>
+            <p>Develop the skills to thrive as an entrepreneur.</p>
+        </div>
+        <div class="offering-tile">
+            <span class="emoji">🌱</span> <!-- Emoji for Self-Development -->
+            <h3>Self-Development</h3>
+            <p>Embark on a journey of personal growth and fulfillment.</p>
+        </div>
+        <div class="offering-tile">
+            <span class="emoji">📜</span> <!-- Emoji for Certified Courses -->
+            <h3>Certified Courses</h3>
+            <p>Earn recognized credentials to showcase your expertise.</p>
+        </div>
+    </div>
+</section>
+
+    <!-- Empowering Individuals Section -->
+<section id="empowering-individuals" class="section">
+    <h2>Empowering Individuals to Pursue Their Passions</h2>
+
+    <!-- Our Mission Dropdown -->
+    <div class="dropdown">
+        <button class="dropdown-btn">Our Mission</button>
+        <div class="dropdown-content">
+            <p>We believe that everyone has the potential to turn their dreams into reality. Our platform is designed to provide the tools, resources, and support needed to help individuals unlock their full potential and pursue their passions.</p>
+        </div>
+    </div>
+
+    <!-- Our Approach Dropdown -->
+    <div class="dropdown">
+        <button class="dropdown-btn">Our Approach</button>
+        <div class="dropdown-content">
+            <ul>
+                <li>Comprehensive Kits</li>
+                <li>Expert-Led Courses</li>
+                <li>Personalized Guidance</li>
+                <li>Supportive Community</li>
+            </ul>
+        </div>
+    </div>
+</section>
+<!-- Start Your Journey Section -->
+<section id="start-journey" class="section">
+    <h2>Start Your Journey: Explore Our Offerings</h2>
+    <div class="dropdown">
+        <button class="dropdown-btn">View Kits and Courses</button>
+        <div class="dropdown-content">
+            <p>All Kits: ₹449</p>
+            <p>All Courses: ₹249</p>
+        </div>
+    </div>
+</section>
+
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 Vision Vault. Empowering Individuals to Pursue Their Passions.</p>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        // Scene setup
+        const scene = new THREE.Scene();
+        const sphereContainer = document.getElementById('sphere-container');
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(sphereContainer.clientWidth, sphereContainer.clientHeight);
+        renderer.setClearColor(0x000000); // Match OLED black
+        sphereContainer.appendChild(renderer.domElement);
+
+        const camera = new THREE.PerspectiveCamera(75, sphereContainer.clientWidth / sphereContainer.clientHeight, 0.1, 1000);
+        camera.position.z = 10;
+
+        // Create evenly distributed dots on a sphere
+        const points = [];
+        const numPoints = 1000;
+        const radius = 4;
+
+        for (let i = 0; i < numPoints; i++) {
+            const theta = Math.acos(2 * Math.random() - 1); // Random angle for latitude
+            const phi = 2 * Math.PI * Math.random(); // Random angle for longitude
+
+            const x = radius * Math.sin(theta) * Math.cos(phi);
+            const y = radius * Math.sin(theta) * Math.sin(phi);
+            const z = radius * Math.cos(theta);
+
+            points.push(new THREE.Vector3(x, y, z));
+        }
+
+        const geometry = new THREE.BufferGeometry().setFromPoints(points);
+        const material = new THREE.PointsMaterial({ color: 0xffffff, size: 0.05 }); // White dots for dark background
+        const dotSphere = new THREE.Points(geometry, material);
+        scene.add(dotSphere);
+
+        function animate() {
+            requestAnimationFrame(animate);
+            dotSphere.rotation.y += 0.005;
+            dotSphere.rotation.x += 0.002;
+            renderer.render(scene, camera);
+        }
+
+        animate();
+
+        // Handle window resize and adjust aspect ratio
+        window.addEventListener('resize', () => {
+            const width = sphereContainer.clientWidth;
+            const height = sphereContainer.clientHeight;
+            renderer.setSize(width, height);
+            camera.aspect = width / height;
+            camera.updateProjectionMatrix();
+        });
+    </script>
+</body>
+</html>
